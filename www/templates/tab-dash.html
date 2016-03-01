@@ -1,8 +1,39 @@
-<ion-view view-title="High Score" hide-tabs='true' hide-nav-bar='true'>
+<ion-view view-title="High Score" hide-tabs='true' hide-nav-bar='true' class="high-score game-pane">
   <ion-content class="padding">
-    <h2>Your High Score</h2>
-    <button class="button button-balanced" ui-sref="tab.account">
-      Play! 
-    </button>
+    <div class="row text-center">
+      <div class="col col-50 col-offset-25">
+        <img ng-src="img/high_score.jpg" style="max-width: 50vw">
+      </div>
+    </div>
+    <div class="row text-center">
+      <div class="col">
+        <h1>JMD 300</h1>
+        <h4>LAST SCORE: 98</h4><br />
+        <h2>TODAY'S TOP SCORES</h2>
+        <h3>SYD 300</h3>
+        <h3>NND 300</h3>
+        <h3>RGD 300</h3>
+      </div>
+    </div>
+    <div class="padding-vertical">
+      <div class="row text-center">
+        <div class="col col-40 col-offset-10">
+          <button class="button button-balanced" ui-sref="tab.account">
+            PLAY AGAIN 
+          </button>
+        </div>
+        <div class="col col-40">
+          <button class="button button-balanced">
+            MAIN MENU
+          </button>
+        </div>
+      </div>
+    </div>
+    <br />
+    <div class="row text-center">
+      <div class="col">
+        <a class="button button-icon icon ion-share"></a>
+      </div>
+    </div>
   </ion-content>
 </ion-view>

@@ -1,1 +1,13 @@
 /* Empty. Add your own CSS if you like */
+
+.pane .game-pane {
+  background-color: #000;
+}
+
+.high-score h1,h2,h3,h4 {
+  color: #ffbb00;
+}
+
+.high-score a {
+  color: #ffffff;
+}
