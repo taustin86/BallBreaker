@@ -4,8 +4,16 @@
   background-color: #000;
 }
 
-.high-score h1,h2,h3,h4 {
+.high-score h1,.high-score h2,.high-score h3,.high-score h4 {
   color: #ffbb00;
+}
+
+.play-round h1,.play-round h1,.play-round h2,.play-round h3,.play-round h4,.play-round i {
+  color: #ffffff;
+}
+
+.play-round i {
+  font-size: 10vh;
 }
 
 .high-score a {
