@@ -19,38 +19,29 @@ angular.module('starter.directives', [])
     return {
         restrict: 'AEC',
         link: function postLink(scope, element, attrs) {
-            var path;
-            var drag = false;
+          // Only executed our code once the DOM is ready.
+          // Get a reference to the canvas object
+          var canvas = document.getElementById('canvas');
 
-            function mouseUp(event) {
-                //Clear Mouse Drag Flag
-                drag = false;
-            }
+          // Create an empty project and a view for the canvas:
+          paper.setup(canvas);
 
-            function mouseDrag(event) {
-                if (drag) {
-                    path.add(new paper.Point(event.layerX, event.layerY));
-                    path.smooth();
-                }
-            }
+          var path = new Path.Circle({
+            center: view.center,
+            radius: 25,
+            strokeWidth: 2,
+            strokeColor: 'white',
+            fillColor: 'white',
+            selected: true
+          });
 
-            function mouseDown(event) {
-                //Set  flag to detect mouse drag
-                drag = true;
-                path = new paper.Path();
-                path.strokeColor = 'black';
-                path.add(new paper.Point(event.layerX, event.layerY));
-            }
+          path.insert(4, new Point(view.center.x - 25, view.center.y + 25));
 
-            function initPaper() {
-                paper.install(window);
-                paper.setup('canvas');
-            }
+          view.onResize = function(event) {
+            path.position = view.center;
+          }
 
-            element.on('mousedown', mouseDown).on('mouseup', mouseUp).on('mousemove', mouseDrag);
-
-            initPaper();
-
+          view.draw();
         }
     };
 });
