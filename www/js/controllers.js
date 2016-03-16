@@ -25,4 +25,8 @@ angular.module('starter.controllers', [])
   $scope.settings = {
     enableFriends: true
   };
+  if(screen.lockOrientation != undefined){
+    screen.lockOrientation('landscape');
+  }
+  document.getElementById("game-over").style.visibility = "hidden";
 });

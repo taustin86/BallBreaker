@@ -19,7 +19,8 @@ angular.module('starter.directives', [])
     return {
         restrict: 'AEC',
         link: function postLink(scope, element, attrs) {
-          // Only executed our code once the DOM is ready.
+          var trackerRadius = window.innerWidth * .06;
+
           // Get a reference to the canvas object
           var canvas = document.getElementById('canvas');
 
@@ -28,14 +29,25 @@ angular.module('starter.directives', [])
 
           var path = new Path.Circle({
             center: view.center,
-            radius: 25,
+            radius: trackerRadius,
             strokeWidth: 2,
             strokeColor: 'white',
             fillColor: 'white',
             selected: true
           });
 
-          path.insert(4, new Point(view.center.x - 25, view.center.y + 25));
+          path.insert(4, new Point(view.center.x - trackerRadius, view.center.y + trackerRadius));
+
+          var tool = new Tool();
+
+          tool.onMouseDrag = function(event) {
+            event.preventDefault();
+            path.position = path.position.add(new Point(event.delta.x, event.delta.y));
+          }
+
+          view.onFrame = function(event) {
+            path.rotate(1);
+          }
 
           view.onResize = function(event) {
             path.position = view.center;

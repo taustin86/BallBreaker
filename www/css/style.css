@@ -1,5 +1,10 @@
 /* Empty. Add your own CSS if you like */
 
+canvas {
+  width:  100%;
+  height: 70vh;
+}
+
 .pane .game-pane {
   background-color: #000;
 }
@@ -12,8 +17,12 @@
   color: #ffffff;
 }
 
-.play-round i {
-  font-size: 10vh;
+.play-round h1,.play-round i {
+  font-size: 8vh;
+}
+
+.play-round button {
+  font-size: 5vh;
 }
 
 .high-score a {
