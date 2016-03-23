@@ -19,7 +19,12 @@ angular.module('starter.directives', [])
     return {
         restrict: 'AEC',
         link: function postLink(scope, element, attrs) {
-          var trackerRadius = window.innerWidth * .04;
+          var trackerRadius = window.innerWidth * 0.125;
+
+          if(screen.lockOrientation != undefined){
+            //Mobile device pinned to landscape
+            trackerRadius = window.innerWidth * 0.25;
+          }
 
           // Get a reference to the canvas object
           var canvas = document.getElementById('canvas');
@@ -27,23 +32,26 @@ angular.module('starter.directives', [])
           // Create an empty project and a view for the canvas:
           paper.setup(canvas);
 
-          var path = new Path.Circle({
+          var tracker = new Path.Circle({
             center: view.center,
             radius: trackerRadius,
-            strokeWidth: 2,
+            strokeWidth: trackerRadius * 0.125,
             strokeColor: 'white',
-            fillColor: 'white'
+            closed: false
           });
 
-          var tool = new Tool();
+          var lastPointX = tracker.lastSegment.point.x + (trackerRadius * Math.sin(-0.25 * Math.PI));
+          var lastPointY = tracker.lastSegment.point.y - (trackerRadius * (1 - Math.cos(-0.25 * Math.PI)));
 
+          tracker.add(new Point(lastPointX, lastPointY));
+
+          var tool = new Tool();
           tool.onMouseDrag = function(event) {
-            event.preventDefault();
-            path.position = path.position.add(new Point(event.delta.x, event.delta.y));
+            tracker.rotate(event.delta.angleInDegrees * 0.05, view.center);
           }
 
           view.onResize = function(event) {
-            path.position = view.center;
+            tracker.position = view.center;
           }
 
           view.draw();
