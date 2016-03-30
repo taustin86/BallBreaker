@@ -1,50 +1,28 @@
 angular.module('starter.services', [])
 
-.factory('Chats', function() {
-  // Might use a resource here that returns a JSON array
+.factory('Ball', function(){
 
-  // Some fake testing data
-  var chats = [{
-    id: 0,
-    name: 'Ben Sparrow',
-    lastText: 'You on your way?',
-    face: 'img/ben.png'
-  }, {
-    id: 1,
-    name: 'Max Lynx',
-    lastText: 'Hey, it\'s me',
-    face: 'img/max.png'
-  }, {
-    id: 2,
-    name: 'Adam Bradleyson',
-    lastText: 'I should buy a boat',
-    face: 'img/adam.jpg'
-  }, {
-    id: 3,
-    name: 'Perry Governor',
-    lastText: 'Look at my mukluks!',
-    face: 'img/perry.png'
-  }, {
-    id: 4,
-    name: 'Mike Harrington',
-    lastText: 'This is wicked good ice cream.',
-    face: 'img/mike.png'
-  }];
-
-  return {
-    all: function() {
-      return chats;
-    },
-    remove: function(chat) {
-      chats.splice(chats.indexOf(chat), 1);
-    },
-    get: function(chatId) {
-      for (var i = 0; i < chats.length; i++) {
-        if (chats[i].id === parseInt(chatId)) {
-          return chats[i];
-        }
-      }
-      return null;
+  function Ball(origin) {
+    if(origin.x <= view.center.x) {
+      this.direction = 1;
+    } else {
+      this.direction = -1;
     }
-  };
+    this.slope = ((view.center.y - origin.y)/(view.center.x - origin.x));
+    this.path = new Path.Circle({
+      center: [origin.x, origin.y],
+      radius: 50,
+      strokeColor: 'green',
+      fillColor: 'green'
+    });
+  }
+
+  Ball.prototype.move = function() {
+    var nextX = this.path.position.x + (this.direction * 3);
+    var nextY = this.slope * (nextX - this.path.position.x) + this.path.position.y;
+    this.path.position.x = nextX;
+    this.path.position.y = nextY;
+  }
+
+  return Ball;
 });

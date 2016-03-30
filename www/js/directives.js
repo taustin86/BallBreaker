@@ -15,31 +15,10 @@ angular.module('starter.directives', [])
     };
 })
 
-.directive('draw', function () {
+.directive('draw', function ($rootScope, Ball) {
     return {
         restrict: 'AEC',
         link: function postLink(scope, element, attrs) {
-          var Ball = function(origin, slope) {
-            if(origin.x <= view.center.x) {
-              this.direction = 1;
-            } else {
-              this.direction = -1;
-            }
-            this.slope = slope;
-            this.path = new Path.Circle({
-              center: [origin.x, origin.y],
-              radius: 50,
-              strokeColor: 'green',
-              fillColor: 'green'
-            });
-          }
-
-          Ball.prototype.move = function() {
-            var nextX = this.path.position.x + (this.direction * 3);
-            var nextY = this.slope * (nextX - this.path.position.x) + this.path.position.y;
-            this.path.position.x = nextX;
-            this.path.position.y = nextY;
-          }
 
           var pinToViewEdge = function(point) {
             var mask = Math.floor((Math.random() * 100) + 1) % 4;
@@ -90,7 +69,7 @@ angular.module('starter.directives', [])
           var ballTargets = [];
           window.setInterval(function(){
             var startingPoint = pinToViewEdge(Point.random().multiply(view.bounds.bottomRight));
-            ballTargets.push(new Ball(startingPoint, ((view.center.y - startingPoint.y)/(view.center.x - startingPoint.x))));
+            ballTargets.push(new Ball(startingPoint));
           }, 3000);
 
           var tool = new Tool();
