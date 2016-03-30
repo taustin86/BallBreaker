@@ -19,6 +19,52 @@ angular.module('starter.directives', [])
     return {
         restrict: 'AEC',
         link: function postLink(scope, element, attrs) {
+          var Ball = function(origin, slope) {
+            if(origin.x <= view.center.x) {
+              this.direction = 1;
+            } else {
+              this.direction = -1;
+            }
+            this.slope = slope;
+            this.path = new Path.Circle({
+              center: [origin.x, origin.y],
+              radius: 50,
+              strokeColor: 'green',
+              fillColor: 'green'
+            });
+          }
+
+          Ball.prototype.move = function() {
+            var nextX = this.path.position.x + (this.direction * 3);
+            var nextY = this.slope * (nextX - this.path.position.x) + this.path.position.y;
+            this.path.position.x = nextX;
+            this.path.position.y = nextY;
+          }
+
+          var pinToViewEdge = function(point) {
+            var mask = Math.floor((Math.random() * 100) + 1) % 4;
+            switch(mask) {
+              case 0:
+                console.log('Pin left');
+                return new Point(0, point.y);
+                break;
+              case 1:
+                console.log('Pin top');
+                return new Point(point.x, 0);
+                break;
+              case 2:
+                console.log('Pin right');
+                return new Point(view.bounds.bottomRight.x, point.y);
+                break;
+              case 3:
+                console.log('Pin bottom');
+                return new Point(point.x, view.bounds.bottomRight.y);
+                break;
+              default:
+                return point;
+            }
+          }
+
           var trackerRadius = window.innerWidth * 0.125;
 
           if(screen.lockOrientation != undefined){
@@ -45,6 +91,9 @@ angular.module('starter.directives', [])
 
           tracker.add(new Point(lastPointX, lastPointY));
 
+          var startingPoint = pinToViewEdge(Point.random().multiply(view.bounds.bottomRight));
+          var movingBall = new Ball(startingPoint, ((view.center.y - startingPoint.y)/(view.center.x - startingPoint.x)));
+
           var tool = new Tool();
           tool.onMouseDrag = function(event) {
             tracker.rotate(event.delta.angleInDegrees * 0.05, view.center);
@@ -52,6 +101,10 @@ angular.module('starter.directives', [])
 
           view.onResize = function(event) {
             tracker.position = view.center;
+          }
+
+          view.onFrame = function(event) {
+            movingBall.move();
           }
 
           view.draw();
