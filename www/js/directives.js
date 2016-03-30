@@ -58,6 +58,7 @@ angular.module('starter.directives', [])
             radius: trackerRadius,
             strokeWidth: trackerRadius * 0.125,
             strokeColor: 'white',
+            strokeCap: 'round',
             closed: false
           });
 
@@ -65,11 +66,13 @@ angular.module('starter.directives', [])
           var lastPointY = tracker.lastSegment.point.y - (trackerRadius * (1 - Math.cos(-0.25 * Math.PI)));
 
           tracker.add(new Point(lastPointX, lastPointY));
+          var ballRadius = tracker.segments[0].point.getDistance(tracker.segments[4].point) * .27;
+          console.log(ballRadius);
 
           var ballTargets = [];
           window.setInterval(function(){
             var startingPoint = pinToViewEdge(Point.random().multiply(view.bounds.bottomRight));
-            ballTargets.push(new Ball(startingPoint));
+            ballTargets.push(new Ball(startingPoint, ballRadius));
           }, 3000);
 
           var tool = new Tool();
@@ -90,7 +93,13 @@ angular.module('starter.directives', [])
               return viewable;
             });
             for(var i = 0; i < ballTargets.length; i++){
-              ballTargets[i].move();
+              ballTargets[i].move(3);
+              ballTargets[i].react(tracker);
+              for(var j = 0; j < ballTargets.length; j++){
+                if(i !== j){
+                  ballTargets[i].react(ballTargets[j].path);
+                }
+              }
             }
           }
 
