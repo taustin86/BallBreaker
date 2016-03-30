@@ -45,19 +45,15 @@ angular.module('starter.directives', [])
             var mask = Math.floor((Math.random() * 100) + 1) % 4;
             switch(mask) {
               case 0:
-                console.log('Pin left');
                 return new Point(0, point.y);
                 break;
               case 1:
-                console.log('Pin top');
                 return new Point(point.x, 0);
                 break;
               case 2:
-                console.log('Pin right');
                 return new Point(view.bounds.bottomRight.x, point.y);
                 break;
               case 3:
-                console.log('Pin bottom');
                 return new Point(point.x, view.bounds.bottomRight.y);
                 break;
               default:
@@ -91,8 +87,11 @@ angular.module('starter.directives', [])
 
           tracker.add(new Point(lastPointX, lastPointY));
 
-          var startingPoint = pinToViewEdge(Point.random().multiply(view.bounds.bottomRight));
-          var movingBall = new Ball(startingPoint, ((view.center.y - startingPoint.y)/(view.center.x - startingPoint.x)));
+          var ballTargets = [];
+          window.setInterval(function(){
+            var startingPoint = pinToViewEdge(Point.random().multiply(view.bounds.bottomRight));
+            ballTargets.push(new Ball(startingPoint, ((view.center.y - startingPoint.y)/(view.center.x - startingPoint.x))));
+          }, 3000);
 
           var tool = new Tool();
           tool.onMouseDrag = function(event) {
@@ -104,7 +103,16 @@ angular.module('starter.directives', [])
           }
 
           view.onFrame = function(event) {
-            movingBall.move();
+            ballTargets = ballTargets.filter(function(ball){
+              var viewable = ball.path.position.isInside(view.bounds);
+              if(!viewable){
+                ball.path.remove();
+              }
+              return viewable;
+            });
+            for(var i = 0; i < ballTargets.length; i++){
+              ballTargets[i].move();
+            }
           }
 
           view.draw();
